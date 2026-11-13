@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#0d0e11" />
+    <link rel="icon" href="./icons/icon-192.png" />
+    <title>MR Scene Player</title>
+    <style>
+      body {
+        margin: 0;
+        background: #0d0e11;
+        font-family: system-ui, sans-serif;
+      }
+      #landing {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 10;
+        box-sizing: border-box;
+        width: min(420px, 100%);
+        padding: 24px;
+        overflow-y: auto;
+        background: rgba(13, 14, 17, 0.88);
+        color: #fafaf7;
+      }
+      #landing[hidden] {
+        display: none;
+      }
+      #landing h1 {
+        margin: 0 0 4px;
+        font-size: 22px;
+      }
+      #landing .sub {
+        margin: 0 0 20px;
+        color: #a5a8b0;
+        font-size: 14px;
+      }
+      #scene-list {
+        margin: 0 0 20px;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .scene {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 10px;
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #2b2e35;
+        border-radius: 10px;
+        background: #17191e;
+        color: inherit;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+      }
+      .scene:hover {
+        border-color: #4a4f5a;
+      }
+      .scene.selected {
+        border-color: #f5d90a;
+        background: #1f2026;
+      }
+      .scene .name {
+        flex: 1 1 100%;
+        font-weight: 600;
+      }
+      .scene .meta {
+        color: #a5a8b0;
+        font-size: 13px;
+      }
+      .badge {
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+      }
+      .badge.fixture {
+        background: #2b2e35;
+        color: #c9ccd2;
+      }
+      .badge.warn {
+        background: #5a3d00;
+        color: #ffd27a;
+      }
+      .setting {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+      .setting input {
+        flex: 1;
+      }
+      #enter-mr {
+        width: 100%;
+        padding: 14px;
+        border: 0;
+        border-radius: 10px;
+        background: #f5d90a;
+        color: #111;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      #enter-mr:disabled {
+        background: #3a3b40;
+        color: #8a8d94;
+        cursor: not-allowed;
+      }
+      #load-device {
+        width: 100%;
+        margin-top: 10px;
+        padding: 12px;
+        border: 1px solid #4a4f5a;
+        border-radius: 10px;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+      #landing-note,
+      #xr-note,
+      #device-note {
+        min-height: 1em;
+        color: #ffd27a;
+        font-size: 13px;
+        white-space: pre-line;
+      }
+      #device-note {
+        color: #a5a8b0;
+      }
+      #landing h2 {
+        margin: 20px 0 8px;
+        font-size: 16px;
+      }
+      #landing h2[hidden] {
+        display: none;
+      }
+      #script-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      #scene-list li,
+      #script-list li {
+        display: flex;
+        gap: 6px;
+      }
+      #scene-list li .scene,
+      #script-list li .scene {
+        flex: 1;
+        width: auto;
+      }
+      .remove {
+        flex: none;
+        padding: 0 12px;
+        border: 1px solid #2b2e35;
+        border-radius: 10px;
+        background: #17191e;
+        color: #a5a8b0;
+        font: inherit;
+        cursor: pointer;
+      }
+      .remove:hover {
+        border-color: #8a3d3d;
+        color: #ff9a9a;
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/index-D1vThLtk.js"></script>
+  </head>
+  <body>
+    <div id="landing">
+      <h1>MR Scene Player</h1>
+      <p class="sub">Pick a scene, then enter mixed reality.</p>
+      <ul id="scene-list"></ul>
+      <label class="setting">
+        Passthrough opacity
+        <input id="opacity" type="range" min="0" max="100" step="5" value="80" />
+        <span id="opacity-value">80%</span>
+      </label>
+      <button id="enter-mr" type="button" disabled>Enter MR</button>
+      <p id="xr-note"></p>
+      <button id="load-device" type="button">Load scenes or scripts from this device</button>
+      <input
+        id="device-files"
+        type="file"
+        multiple
+        accept=".glb,.json,.dlg,.wav,.mp3,.ogg,.m4a,model/gltf-binary,application/json,audio/*"
+        hidden
+      />
+      <p id="landing-note"></p>
+      <p id="device-note"></p>
+      <h2 id="script-heading" hidden>Teleprompter scripts</h2>
+      <ul id="script-list"></ul>
+    </div>
+    <div id="scene-container"></div>
+  </body>
+</html>

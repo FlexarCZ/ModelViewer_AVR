@@ -1,0 +1,265 @@
+<!--
+  Playback panel for the scene player. Element ids are addressed by
+  src/playback-panel.ts. Horizon kit, dark scheme (iwsdk.config.json).
+  Sizes are UIKit units; the scene node scales the panel to about 42 cm wide.
+  .root render-order 6000 keeps the panel above the passthrough fade pass
+  (FADE_ORDER in src/passthrough.ts), so it stays solid when the scene fades.
+-->
+<style>
+  .root {
+    render-order: 6000;
+    flex-direction: column;
+    width: 520px;
+  }
+
+  .content {
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .row {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .spread {
+    justify-content: space-between;
+  }
+
+  .title {
+    flex-grow: 1;
+    color: #1c1d20;
+    font-size: 26px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .title:dark {
+    color: #fafaf7;
+  }
+
+  .label {
+    color: #3a3b40;
+    font-size: 18px;
+  }
+
+  .label:dark {
+    color: #c9ccd2;
+  }
+
+  .timecode {
+    color: #1c1d20;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .timecode:dark {
+    color: #f5d90a;
+  }
+
+  .grow {
+    flex-grow: 1;
+  }
+
+  .speed {
+    flex-grow: 1;
+  }
+
+  .debug {
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 12px;
+    background-color: #e4e5e8;
+  }
+
+  .debug:dark {
+    background-color: #0d0e11;
+  }
+
+  .mono {
+    color: #1c1d20;
+    font-size: 18px;
+  }
+
+  .mono:dark {
+    color: #7ee08a;
+  }
+
+  .takes {
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 12px;
+    background-color: #e4e5e8;
+  }
+
+  .takes:dark {
+    background-color: #17181c;
+  }
+
+  .swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    background-color: #888888;
+  }
+
+  .take-name {
+    flex-grow: 1;
+    color: #1c1d20;
+    font-size: 18px;
+  }
+
+  .take-name:dark {
+    color: #fafaf7;
+  }
+</style>
+<Panel class="root">
+  <div class="content">
+    <div class="row spread">
+      <Button id="btn-prev" variant="tertiary" size="sm">
+        <ButtonIcon><ChevronLeft></ChevronLeft></ButtonIcon>
+      </Button>
+      <div id="scene-name" class="title">No scene</div>
+      <Button id="btn-next" variant="tertiary" size="sm">
+        <ButtonIcon><ChevronRight></ChevronRight></ButtonIcon>
+      </Button>
+    </div>
+
+    <div class="row spread">
+      <div id="timecode" class="timecode">0000 / 0000 | 30 fps</div>
+      <div id="status" class="label">Loading</div>
+    </div>
+
+    <Slider id="scrub" min="0" max="1" step="0.001" value="0"></Slider>
+
+    <div class="row">
+      <Button id="btn-restart" variant="secondary" class="grow">
+        <ButtonIcon><RotateCcw></RotateCcw></ButtonIcon>
+        <ButtonLabel>Restart</ButtonLabel>
+      </Button>
+      <Button id="btn-play" variant="primary" class="grow">
+        <ButtonIcon><Play></Play></ButtonIcon>
+        <ButtonLabel id="play-label">Pause</ButtonLabel>
+      </Button>
+      <Button id="btn-loop" variant="primary" class="grow">
+        <ButtonIcon><Repeat></Repeat></ButtonIcon>
+        <ButtonLabel id="loop-label">Loop on</ButtonLabel>
+      </Button>
+    </div>
+
+    <div class="row">
+      <div class="label">Speed</div>
+      <Button id="speed-0.25" variant="secondary" size="sm" class="speed"><ButtonLabel>0.25x</ButtonLabel></Button>
+      <Button id="speed-0.5" variant="secondary" size="sm" class="speed"><ButtonLabel>0.5x</ButtonLabel></Button>
+      <Button id="speed-1" variant="primary" size="sm" class="speed"><ButtonLabel>1x</ButtonLabel></Button>
+      <Button id="speed-2" variant="secondary" size="sm" class="speed"><ButtonLabel>2x</ButtonLabel></Button>
+    </div>
+
+    <div class="row">
+      <Button id="btn-passthrough" variant="secondary">
+        <ButtonIcon><Eye></Eye></ButtonIcon>
+        <ButtonLabel id="passthrough-label">Passthrough off</ButtonLabel>
+      </Button>
+      <Slider id="opacity" class="grow" min="0" max="100" step="5" value="80"></Slider>
+    </div>
+
+    <div class="takes">
+      <div class="row">
+        <Button id="btn-record" variant="secondary" size="sm" class="grow">
+          <ButtonIcon><Circle></Circle></ButtonIcon>
+          <ButtonLabel id="record-label">Record (B/Y)</ButtonLabel>
+        </Button>
+        <Button id="btn-takes-play" variant="secondary" size="sm" class="grow">
+          <ButtonIcon><Users></Users></ButtonIcon>
+          <ButtonLabel id="takes-play-label">Play takes (stick)</ButtonLabel>
+        </Button>
+      </div>
+      <div id="takes-status" class="label">No takes yet</div>
+      <div id="take-row-0" class="row">
+        <div id="take-swatch-0" class="swatch"></div>
+        <div id="take-name-0" class="take-name">Take</div>
+        <Button id="take-show-0" variant="secondary" size="sm"><ButtonLabel id="take-show-label-0">Hide</ButtonLabel></Button>
+        <Button id="take-del-0" variant="tertiary" size="sm"><ButtonIcon><Trash2></Trash2></ButtonIcon><ButtonLabel id="take-del-label-0">Delete</ButtonLabel></Button>
+      </div>
+      <div id="take-row-1" class="row">
+        <div id="take-swatch-1" class="swatch"></div>
+        <div id="take-name-1" class="take-name">Take</div>
+        <Button id="take-show-1" variant="secondary" size="sm"><ButtonLabel id="take-show-label-1">Hide</ButtonLabel></Button>
+        <Button id="take-del-1" variant="tertiary" size="sm"><ButtonIcon><Trash2></Trash2></ButtonIcon><ButtonLabel id="take-del-label-1">Delete</ButtonLabel></Button>
+      </div>
+      <div id="take-row-2" class="row">
+        <div id="take-swatch-2" class="swatch"></div>
+        <div id="take-name-2" class="take-name">Take</div>
+        <Button id="take-show-2" variant="secondary" size="sm"><ButtonLabel id="take-show-label-2">Hide</ButtonLabel></Button>
+        <Button id="take-del-2" variant="tertiary" size="sm"><ButtonIcon><Trash2></Trash2></ButtonIcon><ButtonLabel id="take-del-label-2">Delete</ButtonLabel></Button>
+      </div>
+      <div id="take-row-3" class="row">
+        <div id="take-swatch-3" class="swatch"></div>
+        <div id="take-name-3" class="take-name">Take</div>
+        <Button id="take-show-3" variant="secondary" size="sm"><ButtonLabel id="take-show-label-3">Hide</ButtonLabel></Button>
+        <Button id="take-del-3" variant="tertiary" size="sm"><ButtonIcon><Trash2></Trash2></ButtonIcon><ButtonLabel id="take-del-label-3">Delete</ButtonLabel></Button>
+      </div>
+      <div id="take-row-4" class="row">
+        <div id="take-swatch-4" class="swatch"></div>
+        <div id="take-name-4" class="take-name">Take</div>
+        <Button id="take-show-4" variant="secondary" size="sm"><ButtonLabel id="take-show-label-4">Hide</ButtonLabel></Button>
+        <Button id="take-del-4" variant="tertiary" size="sm"><ButtonIcon><Trash2></Trash2></ButtonIcon><ButtonLabel id="take-del-label-4">Delete</ButtonLabel></Button>
+      </div>
+      <div id="take-row-5" class="row">
+        <div id="take-swatch-5" class="swatch"></div>
+        <div id="take-name-5" class="take-name">Take</div>
+        <Button id="take-show-5" variant="secondary" size="sm"><ButtonLabel id="take-show-label-5">Hide</ButtonLabel></Button>
+        <Button id="take-del-5" variant="tertiary" size="sm"><ButtonIcon><Trash2></Trash2></ButtonIcon><ButtonLabel id="take-del-label-5">Delete</ButtonLabel></Button>
+      </div>
+    </div>
+
+    <div class="row">
+      <Button id="btn-lifesize" variant="secondary" size="sm" class="grow"><ButtonLabel>Life-size</ButtonLabel></Button>
+      <Button id="btn-tabletop" variant="secondary" size="sm" class="grow"><ButtonLabel>Tabletop</ButtonLabel></Button>
+      <Button id="btn-reset" variant="secondary" size="sm" class="grow"><ButtonLabel>Reset</ButtonLabel></Button>
+      <Button id="btn-snap" variant="primary" size="sm" class="grow"><ButtonLabel id="snap-label">Snap on</ButtonLabel></Button>
+    </div>
+    <div class="row spread">
+      <div id="placement-info" class="label">1:1</div>
+    </div>
+
+    <div class="row">
+      <Button id="btn-cameras" variant="secondary" size="sm" class="grow">
+        <ButtonIcon><Video></Video></ButtonIcon>
+        <ButtonLabel id="cameras-label">Cameras off</ButtonLabel>
+      </Button>
+      <Button id="btn-debug" variant="secondary" size="sm" class="grow">
+        <ButtonIcon><Activity></Activity></ButtonIcon>
+        <ButtonLabel id="debug-label">Debug off</ButtonLabel>
+      </Button>
+      <Button id="btn-script" variant="secondary" size="sm" class="grow">
+        <ButtonIcon><FileText></FileText></ButtonIcon>
+        <ButtonLabel id="script-label">Script off</ButtonLabel>
+      </Button>
+    </div>
+
+    <Button id="btn-exit" variant="secondary" size="sm">
+      <ButtonIcon><LogOut></LogOut></ButtonIcon>
+      <ButtonLabel id="exit-label">Start page (load files)</ButtonLabel>
+    </Button>
+    <div id="exit-note" class="label"></div>
+
+    <div id="debug-rows" class="debug">
+      <div id="debug-perf" class="mono">fps -- | draws -- | tris --</div>
+      <div id="debug-place" class="mono">scale -- | anchor --</div>
+    </div>
+  </div>
+</Panel>

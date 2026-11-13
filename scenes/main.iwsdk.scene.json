@@ -1,0 +1,91 @@
+{
+  "version": "iwsdk.scene.v1",
+  "units": "meters",
+  "components": {
+    "com.iwsdk.components.IBLGradient": {
+      "sky": [0.96, 0.94, 0.9, 1],
+      "equator": [0.8, 0.76, 0.7, 1],
+      "ground": [0.46, 0.42, 0.38, 1],
+      "intensity": 0.25
+    }
+  },
+  "environment": {
+    "toneMapping": "aces",
+    "exposure": 1,
+    "shadows": false
+  },
+  "resources": {},
+  "nodes": [
+    {
+      "id": "fill-light",
+      "name": "Fill Light",
+      "components": {
+        "com.iwsdk.components.HemisphereLight": {
+          "skyColor": [0.95, 0.95, 1, 1],
+          "groundColor": [0.35, 0.32, 0.3, 1],
+          "intensity": 1.2
+        }
+      }
+    },
+    {
+      "id": "key-light",
+      "name": "Key Light",
+      "transform": {
+        "position": [2, 4, 3],
+        "rotationDeg": [-55, 35, 0]
+      },
+      "components": {
+        "com.iwsdk.components.DirectionalLight": {
+          "color": [1, 0.95, 0.88, 1],
+          "intensity": 2,
+          "castShadow": false
+        }
+      }
+    },
+    {
+      "id": "playback-panel",
+      "name": "Playback Panel",
+      "content": {
+        "type": "asset",
+        "asset": "playback-panel"
+      },
+      "transform": {
+        "position": [0.25, 1.2, -0.55],
+        "rotationDeg": [0, -20, 0],
+        "scale": 0.08
+      },
+      "components": {
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    },
+    {
+      "id": "teleprompter-panel",
+      "name": "Teleprompter Panel",
+      "content": {
+        "type": "asset",
+        "asset": "teleprompter-panel"
+      },
+      "transform": {
+        "position": [0, 1.25, -0.8],
+        "scale": 0.08
+      },
+      "components": {
+        "RayInteractable": {},
+        "PokeInteractable": {}
+      }
+    }
+  ],
+  "authoring": {
+    "views": [
+      {
+        "id": "hero",
+        "role": "hero",
+        "projection": "perspective",
+        "position": [0, 1.6, 0.6],
+        "target": [0.2, 1.1, -1.5],
+        "fov": 60
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "MR Scene Player",
+  "short_name": "MR Scenes",
+  "description": "Plays FBX scenes as animated mixed-reality scenes on Quest. Scenes stay on the headset.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0d0e11",
+  "theme_color": "#0d0e11",
+  "icons": [
+    { "src": "icons/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "icons/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "icons/icon-512-maskable.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}
