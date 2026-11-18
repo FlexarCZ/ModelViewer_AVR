@@ -1,0 +1,164 @@
+<!--
+  Teleprompter panel. Element ids are addressed by src/teleprompter.ts.
+  Horizon kit, dark scheme. The scene node scales it to about 48 cm wide; it
+  lazily follows the viewer's head, below eye level.
+  .root render-order 6000 keeps it above the passthrough fade, like the playback panel.
+-->
+<style>
+  .root {
+    render-order: 6000;
+    flex-direction: column;
+    width: 600px;
+  }
+
+  .content {
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .row {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .grow {
+    flex-grow: 1;
+  }
+
+  .title {
+    flex-grow: 1;
+    color: #1c1d20;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .title:dark {
+    color: #fafaf7;
+  }
+
+  .speaker {
+    flex-grow: 1;
+    color: #3a3b40;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .speaker:dark {
+    color: #c9ccd2;
+  }
+
+  .label {
+    color: #3a3b40;
+    font-size: 18px;
+  }
+
+  .label:dark {
+    color: #a5a8b0;
+  }
+
+  .card {
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 14px;
+    border-width: 3px;
+    border-color: #2b2e35;
+    background-color: #e4e5e8;
+  }
+
+  .card:dark {
+    background-color: #0d0e11;
+  }
+
+  .line {
+    color: #1c1d20;
+    font-size: 32px;
+    line-height: 1.25;
+  }
+
+  .line:dark {
+    color: #fafaf7;
+  }
+
+  .next {
+    color: #3a3b40;
+    font-size: 19px;
+  }
+
+  .next:dark {
+    color: #8a8d94;
+  }
+
+  .choices {
+    flex-direction: column;
+    gap: 6px;
+  }
+</style>
+<Panel class="root">
+  <div class="content">
+    <div class="row">
+      <Button id="tp-prev-script" variant="tertiary" size="sm">
+        <ButtonIcon><ChevronLeft></ChevronLeft></ButtonIcon>
+      </Button>
+      <div id="tp-script-name" class="title">No script</div>
+      <Button id="tp-next-script" variant="tertiary" size="sm">
+        <ButtonIcon><ChevronRight></ChevronRight></ButtonIcon>
+      </Button>
+    </div>
+
+    <div id="tp-card" class="card">
+      <div class="row">
+        <div id="tp-speaker" class="speaker">Speaker</div>
+        <div id="tp-position" class="label">0 / 0</div>
+      </div>
+      <div id="tp-line" class="line">Load a script on the landing page.</div>
+    </div>
+
+    <div id="tp-next" class="next">Next</div>
+
+    <div id="tp-choices" class="choices">
+      <Button id="tp-choice-0" variant="secondary" size="sm"><ButtonLabel id="tp-choice-label-0">Choice</ButtonLabel></Button>
+      <Button id="tp-choice-1" variant="secondary" size="sm"><ButtonLabel id="tp-choice-label-1">Choice</ButtonLabel></Button>
+      <Button id="tp-choice-2" variant="secondary" size="sm"><ButtonLabel id="tp-choice-label-2">Choice</ButtonLabel></Button>
+    </div>
+
+    <div class="row">
+      <Button id="tp-back" variant="secondary" size="sm" class="grow">
+        <ButtonIcon><ArrowLeft></ArrowLeft></ButtonIcon>
+        <ButtonLabel>Back</ButtonLabel>
+      </Button>
+      <Button id="tp-advance" variant="primary" size="sm" class="grow">
+        <ButtonIcon><ArrowRight></ArrowRight></ButtonIcon>
+        <ButtonLabel id="tp-advance-label">Start (A/X)</ButtonLabel>
+      </Button>
+      <Button id="tp-hear" variant="secondary" size="sm" class="grow">
+        <ButtonIcon><Volume2></Volume2></ButtonIcon>
+        <ButtonLabel>Hear</ButtonLabel>
+      </Button>
+      <Button id="tp-restart" variant="secondary" size="sm" class="grow">
+        <ButtonIcon><RotateCcw></RotateCcw></ButtonIcon>
+        <ButtonLabel>Restart</ButtonLabel>
+      </Button>
+    </div>
+
+    <div class="row">
+      <Button id="tp-role" variant="secondary" size="sm" class="grow">
+        <ButtonIcon><User></User></ButtonIcon>
+        <ButtonLabel id="tp-role-label">Role: read-through</ButtonLabel>
+      </Button>
+      <Button id="tp-voice" variant="primary" size="sm">
+        <ButtonIcon><Volume2></Volume2></ButtonIcon>
+        <ButtonLabel id="tp-voice-label">Voices on</ButtonLabel>
+      </Button>
+    </div>
+  </div>
+</Panel>
